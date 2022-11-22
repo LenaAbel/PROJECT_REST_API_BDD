@@ -1,5 +1,11 @@
 const fs = require('fs')
 const chalk = require('chalk')
+const queries = require("../queries/queries")
+const categories_queries = require("../queries/categories_queries")
+const prizes_queries = require("../queries/prizes_queries")
+const year_queries = require("../queries/year_queries")
+
+const pool = require("../db");
 
 /**
  * Reads the file 'prize.json'
@@ -102,36 +108,18 @@ const getPrizes = (year, category) => {
     return prizes;
 };
 
-/**
- * Retrieve all the laureates and pass the result to a callback.
- *   Laureates are returned as an array of {id, firstname, surname}:
- *
- * @param {function} callback: called upon success.
- */
 const getAllLaureatesF1 = (callback) => {
-    const file = readPrizes();
-    const laureatesList = [];
-    if (file.length > 0) {
-        file.forEach(prize => {
-            if (prize.laureates) {
-                prize["laureates"].forEach((laureate) => {
-                    var duplicatedID = laureatesList.find((l) => l.id === laureate["id"]);
-                    if (!duplicatedID) {
-                        laureatesList.push({
-                            id: laureate["id"],
-                            firstname: laureate["firstname"],
-                            surname: laureate["surname"]
-                        });
-                    }
-                });
+    try {
+        pool.query(queries.getAllLaureates, (error, results) => {
+            if(error) {
+                console.log(error)
+                return callback([]);
             }
+            return callback(null, results.rows)
         });
-    }
-    if (laureatesList !== []) {
-        laureatesList.sort((a, b) => a.id - b.id);
-        return callback(null, laureatesList);
-    } else {
-        return callback();
+    } catch (e){
+        console.log(e);
+        return callback([]);
     }
 };
 

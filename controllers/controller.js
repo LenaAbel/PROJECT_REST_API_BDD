@@ -7,9 +7,10 @@ exports.getAllLaureatesF1 = (req, res) => {
     services.getAllLaureatesF1((error, results) => {
         console.log(chalk.green("Request for F1 is a success!"));
         if (error) {
-            return res.status(400).send({success: 0, data: error});
+            console.log(error);
+            res.status(400).send({success: 0, data: error});
         }
-        return res.status(200).send({success: 1, data: results});
+        res.status(200).json(results);
     });
 };
 

@@ -5,20 +5,20 @@ DROP TABLE IF EXISTS LAUREATES;
 
 
 CREATE TABLE IF NOT EXISTS LAUREATES(
-   id_laureate SERIAL,
+   id_laureate INT,
    firstname VARCHAR(50),
    surname VARCHAR(50),
    PRIMARY KEY(id_laureate)
 );
 
 CREATE TABLE IF NOT EXISTS CATEGORY(
-   id_category SERIAL,
+   id_category INT,
    nom_category VARCHAR(50),
    PRIMARY KEY(id_category)
 );
 
 CREATE TABLE IF NOT EXISTS PRIZES(
-   id_prize SERIAL,
+   id_prize INT,
    id_category INT NOT NULL,
    PRIMARY KEY(id_prize),
    FOREIGN KEY(id_category) REFERENCES CATEGORY(id_category)

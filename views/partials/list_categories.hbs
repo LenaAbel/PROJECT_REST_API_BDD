@@ -1,0 +1,95 @@
+<style>
+    .justify-content-right{
+        display: block;
+        margin-left: auto;
+        margin-right: 0;
+        text-indent: 30px;
+    }
+</style>
+<section class="banner">
+    <h1> List categories</h1>
+</section>
+
+<br>
+<div class="container">
+    <div class="row m-4">
+        <div class="col"><h2>CATEGORIES</h2></div>
+
+        <div class="d-inline ">
+            <div class="d-inline">
+                {{# if categories}}
+                    <div class="d-inline ">
+                        <form class="form-inline" id="category_form" method="post" action="/list_categories">
+                            <div class="col" style="padding: 0px">
+                                <div class="dropdown">
+                                    <div class='form-field'>
+                                        <select id='categories' name="categories" class='form-control'
+                                                onchange="submit()">
+                                            <option>Choose an option</option>
+                                            {{# each categories}}
+                                                <option value="{{this}}"{{# equals ../category "==="
+                                                                                   this}}selected{{/equals}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {{/if}}
+                <div class="form-inline">
+                    <input class="form-control" id="search" placeholder="Search" aria-label="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mx-auto" id="research">
+    {{# if laureates}}
+    <div class="row m-1 mx-3">
+        <div class="table-responsive" id="laureates">
+            <table class="table table-bordered" id="table" style="width: 75%; margin-left: auto; margin-right: auto;">
+                <thead class="thead-dark">
+                <tr>
+                    <th>First name</th>
+                    <th>Surname</th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+                {{# each laureates}}
+                    <tr>
+                        <th>{{this.firstname}}</th>
+                        <th>{{this.surname}}</th>
+                        <th>{{this.year}}</th>
+                    </tr>
+                {{/each}}
+            </table>
+        </div>
+    {{/if}}
+</div>
+</div>
+
+<script>
+    // Check if categories in dropdown is correctly selected DEBUG
+    const select = document.getElementById("categories");
+    select.addEventListener('change', function () {
+                console.log(this.value);
+            }, false
+    );
+
+    function submit() {
+        document.getElementById("category_form").submit();
+    }
+
+    var $rows = $('#table tr');
+    $('#search').keyup(function () {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+        $rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+
+</script>

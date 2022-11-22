@@ -1,0 +1,81 @@
+<br><h2 style="text-align: center">ADD LAUREATE</h2>
+
+<div class="container">
+    <form id="add_laureate_form" method="post" class="col" action="/add_laureates">
+        <div class="row-auto form">
+            <label for="firstname"><i class="bi bi-person-circle"></i> FIRST NAME :</label>
+            <input type="text" name="firstname" class="form-control" id="firstname" required="required">
+        </div>
+        <br>
+        <div class="row-auto form">
+            <label for="surname"><i class="bi bi-person-circle"></i> SURNAME :</label>
+            <input type="text" name="surname" class="form-control" id="surname">
+        </div>
+        <br>
+        <div class="row-auto form">
+            <label for="motivation"><i class="bi bi-chat-right-text-fill"></i> MOTIVATION :</label>
+            <input type="text" name="motivation" class="form-control" id="motivation">
+        </div>
+        <br>
+        <div class="row-auto form">
+            <label for="year"><i class="bi bi-calendar-date-fill"></i> YEAR :</label>
+            <input type="text" name="year" class="form-control" id="year">
+        </div>
+        <br>
+        <div class="row-auto form">
+            <label for="category"><i class="bi bi-tags-fill"></i> CATEGORY :</label>
+            {{# if categories}}
+                <form class="form-inline" name="category" id="category" method="post" action="/list_categories">
+
+                    <div class="dropdown">
+                        <div class='form-field'>
+                            <select id='categories' name="categories" class='form-control'>
+                                <option>Choose an option</option>
+                                {{# each categories}}
+                                    <option value="{{this}}">{{this}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            {{/if}}
+        </div>
+        <br>
+        <Button type="button" class="btn btn-secondary center" onclick="formSubmit()">SUBMIT</Button>
+    </form>
+    <br><br>
+</div>
+
+<script>
+    function formSubmit() {
+        var len_firstname = document.getElementById("firstname").value.length;
+        var len_surname = document.getElementById("surname").value.length;
+        var len_motivation = document.getElementById("motivation").value.length;
+
+        submitFlag = false; // This flag would be used further to stop the use going ahead from this particular validation
+
+        if (len_firstname < 3) {
+            alert("Please enter a first name with more than 3 letters.");
+        } else {
+            submitFlag = true;
+        }
+        if (len_surname < 3) {
+            alert("Please enter a surname with more than 3 letters.");
+        } else {
+            submitFlag = true;
+        }
+        if (len_motivation == 0) {
+            alert("Please enter a motivation.");
+        } else {
+            submitFlag = true;
+        }
+        if (submitFlag === true) {
+            document.getElementById("add_laureate_form").submit();
+
+        }
+        return submitFlag;
+
+    }
+
+
+</script>

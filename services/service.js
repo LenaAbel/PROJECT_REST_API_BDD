@@ -112,7 +112,7 @@ const getAllLaureatesF1 = (callback) => {
     try {
         pool.query(queries.getAllLaureates, (error, results) => {
             if(error) {
-                console.log(error)
+                console.log("F1: error service", error);
                 return callback([]);
             }
             return callback(null, results.rows)

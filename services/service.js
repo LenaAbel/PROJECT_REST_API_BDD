@@ -25,7 +25,7 @@ const savePrizes = (prizes) => {
     try {
         const dataJSON = JSON.stringify(prizes);
         fs.writeFileSync('prize.json', dataJSON);
-    } catch(e) {
+    } catch (e) {
         console.log("Error: " + e);
     }
 }
@@ -42,12 +42,12 @@ const findLaureate = (firstname, surname, year, category) => {
 
     if (file.length > 0) {
         file.forEach(prize => {
-            if((prize.year === year && prize.year != null) && (prize.category === category && prize.category != null)) {
+            if ((prize.year === year && prize.year != null) && (prize.category === category && prize.category != null)) {
                 if (prize.laureates) {
                     prize["laureates"].forEach((l) => {
-                        if((l.firstname === firstname && l.firstname != null) &&
+                        if ((l.firstname === firstname && l.firstname != null) &&
                             (l.surname === surname && l.surname != null)) {
-                            laureate["id"] =  l["id"];
+                            laureate["id"] = l["id"];
                             laureate["firstname"] = l["firstname"];
                             laureate["surname"] = l["surname"];
                             laureate["motivation"] = l["motivation"];
@@ -111,17 +111,38 @@ const getPrizes = (year, category) => {
 const getAllLaureatesF1 = (callback) => {
     try {
         pool.query(queries.getAllLaureates, (error, results) => {
-            if(error) {
+            if (error) {
                 console.log("F1: error service", error);
                 return callback([]);
             }
             return callback(null, results.rows)
         });
-    } catch (e){
+    } catch (e) {
         console.log(e);
         return callback([]);
     }
 };
+
+
+
+
+
+
+const getCategoriesF4 = (callback) => {
+    try {
+        pool.query(categories_queries.getCategories, (error, results) => {
+            if (error) {
+                console.log("F4: error service", error);
+                return callback([]);
+            }
+            return callback(null, results.rows)
+        });
+    } catch (e) {
+        console.log(e);
+        return callback([]);
+    }
+};
+
 
 /**
  * Retrieve laureates by their Id and pass the result to a callback.
@@ -137,9 +158,9 @@ const getLaureatesByIdF2 = (id, callback) => {
     file.forEach(prize => {
         if (prize.laureates) {
             prize["laureates"].forEach((laureate) => {
-                if(laureate["id"] === id.toString()) {
+                if (laureate["id"] === id.toString()) {
                     numberOfPrize++;
-                    res = {id: laureate["id"],firstname: laureate["firstname"], surname: laureate["surname"]};
+                    res = {id: laureate["id"], firstname: laureate["firstname"], surname: laureate["surname"]};
                 }
             })
         }
@@ -162,11 +183,11 @@ const numberPrizesF3 = (callback) => {
     let res = 0;
     file.forEach(prize => {
         // If laureates exist and is not empty -> ++
-        if(prize.laureates && prize.laureates.length > 0) {
+        if (prize.laureates && prize.laureates.length > 0) {
             res++;
         }
     });
-    if(res !== 0) {
+    if (res !== 0) {
         return callback(null, res);
     } else {
         return callback(0);
@@ -180,7 +201,7 @@ const numberPrizesF3 = (callback) => {
 const numberLaureatesF4 = (callback) => {
     // F1 : list all laureates so number of laureates is the length of results
     getAllLaureatesF1((error, results) => {
-        if(error) {
+        if (error) {
             return callback([]);
         } else {
             return callback(null, results.length);
@@ -195,15 +216,15 @@ const numberLaureatesF4 = (callback) => {
 const moreThanOnePrizeF5 = (callback) => {
     let laureatesList = [];
     getAllLaureatesF1((error, results) => {
-        if(error) {
+        if (error) {
             return callback([]);
         } else {
             results.forEach(prize => {
                 getLaureatesByIdF2(prize["id"], (err, res) => {
-                    if(err) {
+                    if (err) {
                         return callback([]);
                     } else {
-                        if(res["numberOfPrize"] > 1) {
+                        if (res["numberOfPrize"] > 1) {
                             laureatesList.push(res);
                         }
                     }
@@ -212,28 +233,6 @@ const moreThanOnePrizeF5 = (callback) => {
             return callback(null, laureatesList);
         }
     });
-};
-
-/**
- * Get all categories
- * @param callback
- * @returns {*} the categories
- */
-const getCategoriesF6 = (callback) => {
-    const file = readPrizes();
-    let categories = [];
-    file.forEach(prize => {
-        // Find the duplicated categories
-        var duplicatedCategory = categories.find((category) => category === prize["category"]);
-        if (!duplicatedCategory) {
-            categories.push(prize["category"]);
-        }
-    });
-    if(categories !== []) {
-        return callback(null, categories);
-    } else {
-        return callback([]);
-    }
 };
 
 /**
@@ -250,7 +249,7 @@ const mostPrizePerCategoryF7 = (callback) => {
             results.forEach(obj => {
                 let count = 0;
                 file.forEach((prize) => {
-                    if((obj === prize["category"]) && prize.laureates) {
+                    if ((obj === prize["category"]) && prize.laureates) {
                         prize["laureates"].forEach(obj2 => {
                             count++;
                         })
@@ -258,8 +257,8 @@ const mostPrizePerCategoryF7 = (callback) => {
                 });
                 mostCategories.push({category: obj, count: count});
             });
-            if(mostCategories !== []) {
-                mostCategories.sort((a,b) => b.count - a.count);
+            if (mostCategories !== []) {
+                mostCategories.sort((a, b) => b.count - a.count);
                 return callback(null, mostCategories[0]);
             } else {
                 return callback([]);
@@ -278,11 +277,11 @@ const getNumLaureatesPerYearF8 = (callback) => {
     let mostLaureates = [];
     let years = [];
     file.forEach(prize => {
-        if(years.indexOf(prize["year"]) < 0) {
+        if (years.indexOf(prize["year"]) < 0) {
             years.push(prize["year"]);
         }
     });
-    if(years !== []) {
+    if (years !== []) {
         years.forEach(data => {
             let count = 0;
             file.forEach((prize) => {
@@ -297,12 +296,12 @@ const getNumLaureatesPerYearF8 = (callback) => {
     } else {
         return callback([]);
     }
-    if(mostLaureates !== []) {
+    if (mostLaureates !== []) {
         // Sort by highest number of laureates
-        mostLaureates.sort((a,b) => b.laureates - a.laureates);
+        mostLaureates.sort((a, b) => b.laureates - a.laureates);
         return callback(null, mostLaureates);
     } else {
-            return callback([]);
+        return callback([]);
     }
 };
 
@@ -320,7 +319,7 @@ const getLaureatesPrizesF9 = (id, callback) => {
     file.forEach(prize => {
         if (prize.laureates) {
             prize["laureates"].forEach((laureate) => {
-                if(laureate["id"] === id.toString()) {
+                if (laureate["id"] === id.toString()) {
                     dataLaureate = {firstname: laureate["firstname"], surname: laureate["surname"]};
                     prizes.push({year: prize["year"], category: prize["category"], motivation: laureate["motivation"]});
                 }
@@ -343,11 +342,11 @@ const getLaureatesPrizesF9 = (id, callback) => {
 const getYearsWithoutPrizesF10 = (callback) => {
     let yearsWithoutPrize = [];
     getNumLaureatesPerYearF8((error, results) => {
-        if(error) {
+        if (error) {
             return callback([]);
         } else {
             results.forEach(prize => {
-                if(prize["laureates"] === 0) {
+                if (prize["laureates"] === 0) {
                     yearsWithoutPrize.push(prize);
                 }
             });
@@ -367,11 +366,11 @@ const getYearsWithoutPrizesF10 = (callback) => {
  */
 const allYearsPrizesSortedF11 = (id, callback) => {
     getNumLaureatesPerYearF8((error, results) => {
-        if(error) {
+        if (error) {
             return callback([]);
         } else {
             // Excludes years when no Nobel Prizes were awarded
-            while(results.find(prize => prize.laureates === 0)) {
+            while (results.find(prize => prize.laureates === 0)) {
                 results.splice(results.indexOf(results.find(obj => obj.laureates === 0)), 1)
             }
             // If parameters is -laureates
@@ -402,10 +401,15 @@ const laureatesWhoMatchFilterF12 = (firstname, surname, category, callback) => {
             if (prize.laureates) {
                 prize["laureates"].forEach((laureate) => {
                     // Test if the firstname or surname or category matches the given filters
-                    if((laureate.firstname === firstname && laureate.firstname != null) ||
+                    if ((laureate.firstname === firstname && laureate.firstname != null) ||
                         (laureate.surname === surname && laureate.surname != null) ||
                         (prize.category === category && prize.category != null)) {
-                        resFilter.push({id: laureate["id"], firstname: laureate["firstname"], surname: laureate["surname"], year: prize["year"]});
+                        resFilter.push({
+                            id: laureate["id"],
+                            firstname: laureate["firstname"],
+                            surname: laureate["surname"],
+                            year: prize["year"]
+                        });
                     }
                 })
             }
@@ -429,19 +433,19 @@ const deleteLaureateF13 = (id, year, category, callback) => {
     const file = readPrizes();
     let res = [];
     file.forEach(prize => {
-        if(prize.laureates && year === prize.year && category === prize.category && prize.laureates.length > 0) {
+        if (prize.laureates && year === prize.year && category === prize.category && prize.laureates.length > 0) {
             prize.laureates.forEach((laureate) => {
-                if(id === laureate.id) {
+                if (id === laureate.id) {
                     console.log(laureate);
                     res.push(file[file.indexOf(prize)].laureates[file[file.indexOf(prize)].laureates.indexOf(laureate)]);
                     file[file.indexOf(prize)].laureates.splice(file[file.indexOf(prize)].laureates.indexOf(prize), 1);
                     savePrizes(file);
                 }
-                console.log(chalk.green("Laureate: " + laureate.firstname + " " + laureate.surname + " in : " + prize.category +  " has been deleted."))
+                console.log(chalk.green("Laureate: " + laureate.firstname + " " + laureate.surname + " in : " + prize.category + " has been deleted."))
             });
         }
     });
-    if(res.length > 0) {
+    if (res.length > 0) {
         return callback(null, res);
     } else {
         return callback(chalk.red("ERROR/LAUREATE DOESNT EXIST"), []);
@@ -467,9 +471,9 @@ const updateLaureateF14 = (id, year, category, motivation, callback) => {
     console.log("Category: " + category);
     */
     file.forEach(prize => {
-        if(prize.laureates && year === prize.year && category === prize.category && prize.laureates.length > 0) {
+        if (prize.laureates && year === prize.year && category === prize.category && prize.laureates.length > 0) {
             prize.laureates.forEach((laureate) => {
-                if(id === laureate.id) {
+                if (id === laureate.id) {
                     file[file.indexOf(prize)].laureates[file[file.indexOf(prize)].laureates.indexOf(laureate)].motivation = motivation;
                     res.push(file[file.indexOf(prize)].laureates[file[file.indexOf(prize)].laureates.indexOf(laureate)]);
                     console.log("Laureate: " + laureate.firstname + " " + laureate.surname + " in : " + prize.category + " / Motivation: " + laureate.motivation + " has been updated.");
@@ -478,7 +482,7 @@ const updateLaureateF14 = (id, year, category, motivation, callback) => {
             });
         }
     });
-    if(res.length === 0) {
+    if (res.length === 0) {
         return callback(chalk.red("ERROR"));
     } else {
         return callback(null, "Laureate updated successfully!");
@@ -500,7 +504,7 @@ const addLaureateF15 = (year, category, firstname, surname, motivation, callback
     let added = false;
 
     laureate = findLaureate(firstname, surname, year, category);
-    if(Object.keys(laureate).length === 0) {
+    if (Object.keys(laureate).length === 0) {
         file.forEach(prize => {
             if (prize.year === year && prize.category === category) {
                 maxId = getMaxId() + 1;
@@ -514,14 +518,14 @@ const addLaureateF15 = (year, category, firstname, surname, motivation, callback
             }
         });
         savePrizes(file);
-        if(!added) {
+        if (!added) {
             return callback(chalk.red("COULD NOT INSERT NEW LAUREATE"));
         } else {
             return callback(null, "Laureate added successfully!");
         }
     } else {
         updateLaureateF14(laureate.id, year, category, motivation, (error, results) => {
-            if(error) {
+            if (error) {
                 return callback([]);
             } else {
                 return callback(null, results);
@@ -537,7 +541,6 @@ module.exports = {
     numberPrizesF3: numberPrizesF3,
     numberLaureatesF4: numberLaureatesF4,
     moreThanOnePrizeF5: moreThanOnePrizeF5,
-    getCategoriesF6: getCategoriesF6,
     mostPrizePerCategoryF7: mostPrizePerCategoryF7,
     getNumLaureatesPerYearF8: getNumLaureatesPerYearF8,
     getLaureatesPrizesF9: getLaureatesPrizesF9,
@@ -549,5 +552,8 @@ module.exports = {
     addLaureateF15: addLaureateF15,
     readPrizes: readPrizes,
     findLaureate: findLaureate,
-    savePrizes: savePrizes
+    savePrizes: savePrizes,
+
+
+    getCategoriesF4: getCategoriesF4
 }

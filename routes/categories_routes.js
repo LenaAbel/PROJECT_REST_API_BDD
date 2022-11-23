@@ -4,7 +4,7 @@ var router = express.Router();
 
 
 // http://localhost:3000/categories
-router.get("/", controller.getCategoriesF6);
+router.get("/", controller.getCategoriesF4);
 /**
  * @swagger
  * /categories:

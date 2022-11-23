@@ -22,6 +22,7 @@ router.get("/laureates", controller.getAllLaureatesF1);
  */
 
 // http://localhost:3000/laureates/total
+
 router.get("/laureates/total", controller.numberLaureatesF4);
 /**
  * @swagger

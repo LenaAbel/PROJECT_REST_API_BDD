@@ -14,6 +14,27 @@ exports.getAllLaureatesF1 = (req, res) => {
     });
 };
 
+
+
+
+
+
+
+
+
+exports.getCategoriesF4 = (req, res) => {
+    services.getCategoriesF4((error, results) => {
+        console.log(chalk.green("Request for F4 is a success!"));
+        if (error) {
+            return res.status(400).send({success: 0, data: error});
+        }
+        return res.status(200).send({success: 1, data: results});
+    });
+    /*res.render("list_categories/list_categories.hbs", ({
+        categories: list_categories
+    }));*/
+}
+
 exports.getLaureatesByIdF2 = (req, res) => {
     console.log(chalk.green("Request for F2 is a success!"));
     let idLaureate = req.params.idLaureate;
@@ -71,18 +92,6 @@ exports.moreThanOnePrizeF5 = (req, res) => {
     });
 };
 
-exports.getCategoriesF6 = (req, res) => {
-    services.getCategoriesF6((error, results) => {
-        console.log(chalk.green("Request for F6 is a success!"));
-        if (error) {
-            return res.status(400).send({success: 0, data: error});
-        }
-        return res.status(200).send({success: 1, data: results});
-    });
-    /*res.render("list_categories/list_categories.hbs", ({
-        categories: list_categories
-    }));*/
-}
 
 exports.mostPrizePerCategoryF7 = (req, res) => {
     services.mostPrizePerCategoryF7((error, results) => {

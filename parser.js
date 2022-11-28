@@ -9,7 +9,11 @@ const chalk = require("chalk");
     let categories = [];
     let laureates = [];
 
-    // Insert categories in database
+    /**
+     * Insert categories in database
+     * @param category
+     * @returns {Promise<void>}
+     */
     async function insertCategories(category) {
         let res;
         var duplicatedCategory = await categories.find(r => r === category);
@@ -22,7 +26,13 @@ const chalk = require("chalk");
         }
     }
 
-    // Insert laureates in database
+    /**
+     * Insert laureates in database
+     * @param id of the laureate
+     * @param firstname of the laureate
+     * @param surname of the laureate
+     * @returns {Promise<void>}
+     */
     async function insertLaureates(id, firstname, surname) {
         var duplicatedID = await laureates.find(r => r.id === id);
         if (!duplicatedID) {
@@ -43,14 +53,23 @@ const chalk = require("chalk");
 
     }
 
-    // Get the ID of the given category
-    async function getIDCategory(id_category) {
-        let result = await pool.query(`SELECT id_category FROM CATEGORY WHERE nom_category = $1;`, [id_category]);
-        console.log(result.rows[0].id_category);
+    /**
+     * Get the ID of the given category
+     * @param id_category of the category
+     * @returns {Promise<*>}
+     */
+    async function getIDCategory(category) {
+        let result = await pool.query(`SELECT id_category FROM CATEGORY WHERE nom_category = $1;`, [category]);
+        //console.log(result.rows[0].id_category);
         return result.rows[0].id_category;
     }
 
-    // Insert prize in database
+    /**
+     * Insert prize in database
+     * @param year of the prize
+     * @param category  of the prize
+     * @returns {Promise<void>}
+     */
     async function insertPrizes(year, category) {
         let res;
         let id_category = await getIDCategory(category);
@@ -58,13 +77,25 @@ const chalk = require("chalk");
         console.log(chalk.green("Prizes inserted!"));
     }
 
-    // Get the ID of the given laureate
+    /**
+     * Get the ID of the given prize
+     * @param year of the prize
+     * @param id_category of the prize
+     * @returns {Promise<number>}
+     */
     async function getIdPrize(year, id_category) {
         let result = await pool.query(`SELECT id_prize FROM PRIZES WHERE annee = ($1) AND id_category = ($2)`, [year, id_category]);
         return result.rows[0].id_prize;
     }
 
-    // Get the ID of the given laureate
+    /**
+     * Get the ID of the given laureate
+     * @param id of the laureate
+     * @param year of the prize
+     * @param category of the prize
+     * @param motivation of the laureate
+     * @returns {Promise<void>}
+     */
     async function insertRemporte(id, year, category, motivation) {
         let id_category = await getIDCategory(category);
         let id_prize = await getIdPrize(year, id_category);

@@ -11,15 +11,12 @@ const chalk = require("chalk");
 
     // Insert categories in database
     async function insertCategories(category) {
+        let res;
         var duplicatedCategory = await categories.find(r => r === category);
         if (!duplicatedCategory) {
             categories.push(category);
-            pool.query(`INSERT INTO CATEGORY(nom_category) VALUES ($1)`, [category], (error, results) => {
-                if (error) {
-                    console.log(error);
-                }
-            });
-            console.log(chalk.green("Category inserted!"));
+            res=await pool.query(`INSERT INTO CATEGORY(nom_category) VALUES ($1)`, [category]);
+            return console.log(chalk.green("Category inserted! res: "+res));
         } else {
             console.log(chalk.red("Category exist!"));
         }
@@ -34,7 +31,7 @@ const chalk = require("chalk");
                 firstname,
                 surname
             });
-            pool.query(`INSERT INTO LAUREATES(id_laureate,firstname, surname) VALUES ($1, $2, $3)`, [parseInt(id),firstname, surname], (error, results) => {
+            await pool.query(`INSERT INTO LAUREATES(id_laureate,firstname, surname) VALUES ($1, $2, $3)`, [parseInt(id),firstname, surname], (error, results) => {
                 if (error) {
                     console.log(error);
                 }
@@ -47,34 +44,31 @@ const chalk = require("chalk");
     }
 
     // Get the ID of the given category
-    async function getIDCategory(category) {
-        const result = await pool.query(`SELECT id_category FROM CATEGORY WHERE nom_category = $1;`, [category]);
+    async function getIDCategory(id_category) {
+        let result = await pool.query(`SELECT id_category FROM CATEGORY WHERE nom_category = $1;`, [id_category]);
         console.log(result.rows[0].id_category);
         return result.rows[0].id_category;
     }
 
     // Insert prize in database
     async function insertPrizes(year, category) {
-        const id_category = await getIDCategory(category);
-        pool.query(`INSERT INTO PRIZES(annee, id_category) VALUES ($1, $2)`, [year, id_category], (error, results) => {
-            if (error) {
-                console.log(error);
-            }
-        });
+        let res;
+        let id_category = await getIDCategory(category);
+        res = await pool.query(`INSERT INTO PRIZES(annee, id_category) VALUES ($1, $2)`, [year, id_category]);
         console.log(chalk.green("Prizes inserted!"));
     }
 
-    //
+    // Get the ID of the given laureate
     async function getIdPrize(year, id_category) {
         let result = await pool.query(`SELECT id_prize FROM PRIZES WHERE annee = ($1) AND id_category = ($2)`, [year, id_category]);
         return result.rows[0].id_prize;
     }
 
-    //
+    // Get the ID of the given laureate
     async function insertRemporte(id, year, category, motivation) {
         let id_category = await getIDCategory(category);
         let id_prize = await getIdPrize(year, id_category);
-        pool.query(`INSERT INTO REMPORTE(id_laureate, id_prize, motivation) VALUES ($1, $2, $3)`, [id, id_prize, motivation], (error, results) => {
+        await pool.query(`INSERT INTO REMPORTE(id_laureate, id_prize, motivation) VALUES ($1, $2, $3)`, [id, id_prize, motivation], (error, results) => {
             if (error) {
                 console.log(error);
             }

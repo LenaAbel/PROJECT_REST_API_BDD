@@ -255,6 +255,7 @@ const allYearsPrizesSortedF8 = (sort, callback) => {
     }
 }
 
+
 const deleteLaureateF9 = (id, callback) => {}
 
 const updateLaureateF10 = (id, firstname, surname, motivation, callback) => {}

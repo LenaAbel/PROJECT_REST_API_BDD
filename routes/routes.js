@@ -21,62 +21,8 @@ router.get("/laureates", controller.getAllLaureatesF1);
  *              description: Bad request
  */
 
-// http://localhost:3000/laureates/total
-
-router.get("/laureates/total", controller.numberLaureatesF4);
-/**
- * @swagger
- * /laureates/total:
- *   get:
- *      description: Get number of laureates who received prizes (F4)
- *      tags:
- *          - LAUREATES
- *      responses:
- *          '200':
- *              description: Resource added successfully
- *          '500':
- *              description: Internal server error
- *          '400':
- *              description: Bad request
- */
-
-// http://localhost:3000/laureates
-// Didn't find a solution to name it only /laureates or else SWAGGER thinks its F1
-router.get("/laureates/filter", controller.laureatesWhoMatchFilterF12);
-/**
- * @swagger
- * /laureates/filter:
- *   get:
- *      description:  Used to display laureates who match filter (F12)
- *      tags:
- *          - LAUREATES
- *      parameters:
- *          - in: query
- *            name: firstname
- *            type: string
- *            required: false
- *            example: firstname
- *          - in: query
- *            name: surname
- *            type: string
- *            required: false
- *            example: surname
- *          - in: query
- *            name: category
- *            type: string
- *            required: false
- *            example: category
- *      responses:
- *          '200':
- *              description: Resource found successfully
- *          '500':
- *              description: Internal server error
- *          '400':
- *              description: Bad request
- */
-
-// http://localhost:3000/laureates/:idLaureate?
-router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
+// http://localhost:3000/laureates/:idLaureate
+router.get("/laureates/:idLaureate", controller.getLaureatesByIdF2);
 /**
  * @swagger
  * /laureates/{idLaureate}:
@@ -98,9 +44,9 @@ router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
  *          '400':
  *              description: Bad request
  */
-
+/*
 // http://localhost:3000/laureates/:idLaureate/:year/:category
-router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF14);
+router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF10);
 /**
  * @swagger
  * /laureates/{idLaureate}/{year}/{category}:
@@ -141,70 +87,9 @@ router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF1
  *          '400':
  *              description: Bad request
  */
-
-// http://localhost:3000/laureates
-router.post("/laureates", controller.addLaureateF15);
-/**
- * @swagger
- * /laureates:
- *   post:
- *      description: Add a new laureate for a given year and a given category (F15)
- *      tags:
- *          - LAUREATES
- *      parameters:
- *          - in: query
- *            name: year
- *            type: integer
- *            required: true
- *            example: 1911
- *          - in: query
- *            name: category
- *            type: string
- *            required: true
- *            example: chemistry
- *          - in: query
- *            name: firstname
- *            schema:
- *              type: object
- *              required: true
- *              properties:
- *                  firstname:
- *                      type: string
- *            example: "Alain"
- *          - in: query
- *            name: surname
- *            schema:
- *              type: object
- *              required: true
- *              properties:
- *                  surname:
- *                      type: string
- *            example: "Aspect"
- *          - in: query
- *            name: motivation
- *            schema:
- *              type: object
- *              required: true
- *              properties:
- *                  motivation:
- *                      type: string
- *            example: "for their experiments in entangled photons"
- *      responses:
- *          '200':
- *              description: Resource updated successfully
- *          '500':
- *              description: Internal server error
- *          '400':
- *              description: Bad request
- */
-
 /*
-// http://localhost:3000/filteredLaureatesF12
-router.get("/filteredLaureatesF12", controller.filteredLaureatesF12);
-*/
-
 // http://localhost:3000/laureates
-router.delete("/laureates",controller.deleteLaureateF13);
+router.delete("/laureates",controller.deleteLaureateF9);
 /**
  * @swagger
  * /laureates:
@@ -236,15 +121,5 @@ router.delete("/laureates",controller.deleteLaureateF13);
  *          '400':
  *              description: Bad request
  */
-
-router.get("/list_categories", controller.list_categories);
-
-router.post("/list_categories", controller.list_categories);
-
-router.get("/add_laureates", controller.add_laureates);
-
-router.post("/add_laureates", validateLaureates, controller.new_laureates);
-
-router.put("/add_laureates", validateLaureates, controller.new_laureates);
 
 module.exports = router;

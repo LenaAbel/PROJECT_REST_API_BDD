@@ -4,7 +4,7 @@ var router = express.Router();
 
 
 // http://localhost:3000/years/sort
-router.get("/", controller.allYearsPrizesSortedF11);
+router.get("/sort", controller.allYearsPrizesSortedF8);
 /**
  * @swagger
  * /years:
@@ -28,7 +28,7 @@ router.get("/", controller.allYearsPrizesSortedF11);
  */
 
 // http://localhost:3000/years/winners
-router.get("/winners", controller.getNumLaureatesPerYearF8);
+router.get("/winners", controller.getNumLaureatesPerYearF6);
 /**
  * @swagger
  * /years/winners:
@@ -46,7 +46,7 @@ router.get("/winners", controller.getNumLaureatesPerYearF8);
  */
 
 // http://localhost:3000/years/noPrizes
-router.get("/noPrizes", controller.getYearsWithoutPrizesF10);
+router.get("/noPrizes", controller.getYearsWithoutPrizesF7);
 /**
  * @swagger
  * /years/noPrizes:

@@ -21,8 +21,8 @@ router.get("/", controller.getCategoriesF4);
  *              description: Bad request
  */
 
-// http://localhost:3000//categories/winners
-router.get("/winners", controller.mostPrizePerCategoryF7);
+// http://localhost:3000-/categories/winners
+router.get("/winners", controller.mostPrizePerCategoryF5);
 /**
  * @swagger
  * /categories/winners:

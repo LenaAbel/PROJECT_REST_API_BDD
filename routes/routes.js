@@ -21,7 +21,7 @@ router.get("/laureates", controller.getAllLaureatesF1);
  *              description: Bad request
  */
 
-// http://localhost:3000/laureates/:idLaureate?
+// http://localhost:3000/laureates/:6
 router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
 /**
  * @swagger
@@ -46,7 +46,7 @@ router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
  */
 
 
-// http://localhost:3000/laureates/:idLaureate/:year/:category
+// http://localhost:3000/laureates/:6
 router.put("/laureates/:idLaureate", controller.updateLaureateF10);
 /**
  * @swagger

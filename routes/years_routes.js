@@ -3,8 +3,8 @@ const express = require("express");
 var router = express.Router();
 
 
-// http://localhost:3000/years/sort
-router.get("/sort", controller.allYearsPrizesSortedF8);
+// http://localhost:3000/years/
+router.get("/", controller.allYearsPrizesSortedF8);
 /**
  * @swagger
  * /years:

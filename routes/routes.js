@@ -21,8 +21,8 @@ router.get("/laureates", controller.getAllLaureatesF1);
  *              description: Bad request
  */
 
-// http://localhost:3000/laureates/:idLaureate
-router.get("/laureates/:idLaureate", controller.getLaureatesByIdF2);
+// http://localhost:3000/laureates/:idLaureate?
+router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
 /**
  * @swagger
  * /laureates/{idLaureate}:
@@ -44,12 +44,13 @@ router.get("/laureates/:idLaureate", controller.getLaureatesByIdF2);
  *          '400':
  *              description: Bad request
  */
-/*
+
+
 // http://localhost:3000/laureates/:idLaureate/:year/:category
-router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF10);
+router.put("/laureates/:idLaureate", controller.updateLaureateF10);
 /**
  * @swagger
- * /laureates/{idLaureate}/{year}/{category}:
+ * /laureates/{idLaureate}:
  *   put:
  *      description: Used to update a laureate's motivation with a given ID, year and category (F14)
  *      tags:
@@ -60,12 +61,12 @@ router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF1
  *            type: integer
  *            required: true
  *            example: 6
- *          - in: path
+ *          - in: body
  *            name: year
- *            type: integer
+ *            type: string
  *            required: true
  *            example: 1911
- *          - in: path
+ *          - in: body
  *            name: category
  *            type: string
  *            required: true
@@ -87,8 +88,8 @@ router.put("/laureates/:idLaureate/:year/:category", controller.updateLaureateF1
  *          '400':
  *              description: Bad request
  */
-/*
-// http://localhost:3000/laureates
+
+http://localhost:3000/laureates?idLaureate=6
 router.delete("/laureates",controller.deleteLaureateF9);
 /**
  * @swagger
@@ -103,16 +104,6 @@ router.delete("/laureates",controller.deleteLaureateF9);
  *            type: string
  *            required: true
  *            example: 6
- *          - in: query
- *            name: year
- *            type: integer
- *            required: true
- *            example: 1911
- *          - in: query
- *            name: category
- *            type: string
- *            required: true
- *            example: chemistry
  *      responses:
  *          '200':
  *              description: Resource found successfully

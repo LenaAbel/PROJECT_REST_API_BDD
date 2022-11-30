@@ -20,10 +20,10 @@ const chalk = require("chalk");
         if (!duplicatedCategory) {
             categories.push(category);
             res=await pool.query(`INSERT INTO CATEGORY(nom_category) VALUES ($1)`, [category]);
-            return console.log(chalk.green("Category inserted! res: "+res));
-        } else {
+            //return console.log(chalk.green("Category inserted! res: "+res));
+        } /*else {
             console.log(chalk.red("Category exist!"));
-        }
+        }*/
     }
 
     /**
@@ -46,10 +46,10 @@ const chalk = require("chalk");
                     console.log(error);
                 }
             });
-            console.log(chalk.green("Laureate inserted!"));
-        } else {
+            //console.log(chalk.green("Laureate inserted!"));
+        } /*else {
             console.log(chalk.red("Laureate exist!"));
-        }
+        }*/
 
     }
 
@@ -74,7 +74,7 @@ const chalk = require("chalk");
         let res;
         let id_category = await getIDCategory(category);
         res = await pool.query(`INSERT INTO PRIZES(annee, id_category) VALUES ($1, $2)`, [year, id_category]);
-        console.log(chalk.green("Prizes inserted!"));
+        //console.log(chalk.green("Prizes inserted!"));
     }
 
     /**
@@ -104,7 +104,7 @@ const chalk = require("chalk");
                 console.log(error);
             }
         });
-        console.log(chalk.green("Remporte inserted!"));
+        //console.log(chalk.green("Remporte inserted!"));
     }
 
     for (let i of prize){

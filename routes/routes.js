@@ -1,7 +1,6 @@
 const controller = require("../controllers/controller");
 const express = require("express");
 var router = express.Router();
-const {validateLaureates} = require("../middlewares/add.middlewares.js");
 
 // http://localhost:3000/laureates
 router.get("/laureates", controller.getAllLaureatesF1);

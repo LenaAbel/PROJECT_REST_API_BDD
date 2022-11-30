@@ -21,99 +21,12 @@ const readPrizes = () => {
     }
 }
 
-const savePrizes = (prizes) => {
-    try {
-        const dataJSON = JSON.stringify(prizes);
-        fs.writeFileSync('prize.json', dataJSON);
-    } catch (e) {
-        console.log("Error: " + e);
-    }
-}
-
-/**
- * Find laureate by firstname, surname, year and category
- * @param firstname
- * @param surname
- * @returns the object laureate if found
- */
-const findLaureate = (firstname, surname, year, category) => {
-    let laureate = {};
-    var file = readPrizes();
-
-    if (file.length > 0) {
-        file.forEach(prize => {
-            if ((prize.year === year && prize.year != null) && (prize.category === category && prize.category != null)) {
-                if (prize.laureates) {
-                    prize["laureates"].forEach((l) => {
-                        if ((l.firstname === firstname && l.firstname != null) &&
-                            (l.surname === surname && l.surname != null)) {
-                            laureate["id"] = l["id"];
-                            laureate["firstname"] = l["firstname"];
-                            laureate["surname"] = l["surname"];
-                            laureate["motivation"] = l["motivation"];
-                        }
-                    })
-                }
-            }
-        });
-    }
-    return laureate;
-}
-
-/**
- * Return max(id) as an integer
- * @returns {number}
- */
-const getMaxId = () => {
-    const file = readPrizes();
-    let maxId = 0;
-    if (file.length > 0) {
-        file.forEach(prize => {
-            if (prize.laureates) {
-                prize["laureates"].forEach((laureate) => {
-                    if (parseInt(laureate.id) > maxId) {
-                        maxId = parseInt(laureate.id);
-                        console.log("maxid = " + maxId)
-                    }
-                });
-            }
-        });
-    }
-    return maxId;
-}
-
-/**
- * Return all the prizes for a given year and given category
- * @param year
- * @params category
- * @returns {*}
- */
-const getPrizes = (year, category) => {
-    const file = readPrizes();
-    let prizes = [];
-    file.forEach(prize => {
-        let laureates = [];
-        if (prize.year === year && prize.category === category) {
-            prize["laureates"].forEach((laureate) => {
-                laureates.push({
-                    id: laureate["id"],
-                    firstname: laureate["firstname"],
-                    surname: laureate["surname"],
-                    motivation: laureate["motivation"]
-                });
-            });
-            prizes.push(laureates);
-        }
-    });
-    return prizes;
-};
-
 const getAllLaureatesF1 = (callback) => {
     try {
         pool.query(queries.getAllLaureates, (error, results) => {
             if (error) {
                 console.log("F1: error service", error);
-                return callback([]);
+                return callback("Error retrieving laureates.");
             }
             return callback(null, results.rows)
         });
@@ -130,20 +43,18 @@ const getAllLaureatesF1 = (callback) => {
  * @param {int} id: the user id to be used.
  * @param {function} callback: called upon success.
  */
-
-
-const getLaureatesByIdF2 = (id, callback) => {
+const getLaureatesByIdF2 = (idLaureate, callback) => {
     try {
-        pool.query(queries.getAllLaureatesById, id, (error, results) => {
+        pool.query(queries.getLaureatesById, idLaureate, (error, results) => {
             if (error) {
                 console.log("F2: error service", error);
-                return callback([]);
+                return callback("Error retrieving laureates with id = " + idLaureate);
             }
             return callback(null, results.rows)
         });
     } catch (e) {
         console.log(e);
-        return callback([]);
+        return callback("Error retrieving laureates with id = " + idLaureate);
     }
 }
 
@@ -157,7 +68,7 @@ const moreThanOnePrizeF3 = (callback) => {
         pool.query(prizes_queries.moreThanOnePrize, (error, results) => {
             if (error) {
                 console.log("F3: error service", error);
-                return callback([]);
+                return callback("Error retrieving laureates who received more than one prize.");
             }
             return callback(null, results.rows)
         });
@@ -172,7 +83,7 @@ const getCategoriesF4 = (callback) => {
         pool.query(categories_queries.getCategories, (error, results) => {
             if (error) {
                 console.log("F4: error service", error);
-                return callback([]);
+                return callback("Error retrieving categories.");
             }
             return callback(null, results.rows)
         });
@@ -188,7 +99,7 @@ const mostPrizePerCategoryF5 = (callback) => {
         pool.query(categories_queries.mostPrizePerCategory, (error, results) => {
             if (error) {
                 console.log("F5: error service", error);
-                return callback([]);
+                return callback("Error retrieving the category with the most prizes.");
             }
             return callback(null, results.rows)
         });
@@ -203,7 +114,7 @@ const getNumLaureatesPerYearF6 = (callback) => {
         pool.query(year_queries.getNumLaureatesPerYear, (error, results) => {
             if (error) {
                 console.log("F6: error service", error);
-                return callback([]);
+                return callback("Error retrieving the number of laureates per year.");
             }
             return callback(null, results.rows)
         });
@@ -218,7 +129,7 @@ const getYearsWithoutPrizesF7 = (callback) => {
         pool.query(year_queries.getYearsWithoutPrizes, (error, results) => {
             if (error) {
                 console.log("F7: error service", error);
-                return callback([]);
+                return callback("Error retrieving the years without prizes.");
             }
             return callback(null, results.rows)
         });
@@ -231,34 +142,65 @@ const getYearsWithoutPrizesF7 = (callback) => {
 const allYearsPrizesSortedF8 = (sort, callback) => {
     try {
         // If parameters is asc_laureate
-        if (sort.charAt(0) === "a") {
+        if (sort === "asc_laureates") {
             pool.query(year_queries.allYearsPrizesSortedASC, (error, results) => {
                 if (error) {
                     console.log("F8: error service", error);
-                    return callback([]);
+                    return callback("Error retrieving the years with prizes sorted by number of laureates ASC.");
                 }
                 return callback(null, results.rows)
             });
             // Else if desc_laureate
-        } else if (sort.charAt(0) === "d") {
+        } else if (sort === "desc_laureates") {
             pool.query(year_queries.allYearsPrizesSortedDESC, (error, results) => {
                 if (error) {
                     console.log("F8: error service", error);
-                    return callback([]);
+                    return callback("Error retrieving the years with prizes sorted by number of laureates DESC.");
                 }
                 return callback(null, results.rows)
             });
         }
     } catch (e) {
         console.log(e);
-        return callback([]);
+        return callback("Error retrieving the years with prizes sorted by number of laureates.");
     }
 }
 
 
-const deleteLaureateF9 = (id, callback) => {}
+const deleteLaureateF9 = (id, callback) => {
+    try {
+        pool.query(queries.getLaureatesById, id, (error, results) => {
+            if (results.rowCount === 0) {
+                return callback("Laureate doesn't exist!");
+            }
+            pool.query(queries.deleteLaureate, id, (error, results) => {
+                if (error) {
+                    console.log("F9: error service", error);
+                    return callback("Error deleting laureate.");
+                }
+                return callback(null, results.rows)
+            })
+        });
+    } catch (e) {
+        console.log(e);
+        return callback([]);
+    }
+}
 
-const updateLaureateF10 = (id, firstname, surname, motivation, callback) => {}
+const updateLaureateF10 = (id, annee, category, motivation, callback) => {
+    try {
+        pool.query(queries.updateMotivation, [annee, category, parseInt(id), motivation], (error, results) => {
+            if (error) {
+                console.log("F10: error service", error);
+                return callback("Error updating laureate.");
+            }
+            return callback(null, results.rows)
+        });
+    } catch (e) {
+        console.log(e);
+        return callback("Error updating laureate.");
+    }
+}
 
 module.exports = {
     getAllLaureatesF1: getAllLaureatesF1,
@@ -271,14 +213,5 @@ module.exports = {
     allYearsPrizesSortedF8: allYearsPrizesSortedF8,
     deleteLaureateF9: deleteLaureateF9,
     updateLaureateF10: updateLaureateF10,
-
-
-
-
-
-    readPrizes: readPrizes,
-    findLaureate: findLaureate,
-    savePrizes: savePrizes,
-
-
+    readPrizes: readPrizes
 }

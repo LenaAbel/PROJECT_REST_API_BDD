@@ -16,7 +16,7 @@ exports.getAllLaureatesF1 = (req, res) => {
 
 exports.getLaureatesByIdF2 = (req, res) => {
     const idLaureate = parseInt(req.params.idLaureate);
-    console.log("ID = " + req.params.idLaureate);
+
     services.getLaureatesByIdF2([idLaureate], (error, results) => {
         console.log(chalk.green("Request for F2 is a success!"));
         if (error) {
@@ -26,7 +26,6 @@ exports.getLaureatesByIdF2 = (req, res) => {
         res.status(200).json(results);
     });
 }
-
 
 exports.moreThanOnePrizeF3 = (req, res) => {
     services.moreThanOnePrizeF3((error, results) => {
@@ -46,7 +45,7 @@ exports.getCategoriesF4 = (req, res) => {
         if (error) {
             return res.status(400).send({success: 0, data: error});
         }
-        return res.status(200).send({success: 1, data: results});
+        res.status(200).json(results);
     });
 }
 
@@ -56,7 +55,7 @@ exports.mostPrizePerCategoryF5 = (req, res) => {
         if (error) {
             return res.status(400).send({success: 0, data: error});
         }
-        return res.status(200).send({success: 1, data: results});
+        res.status(200).json(results);
     });
 };
 
@@ -67,18 +66,18 @@ exports.getNumLaureatesPerYearF6 = (req, res) => {
         if (error) {
             return res.status(400).send({success: 0, data: error});
         }
-        return res.status(200).send({success: 1, data: results});
+        res.status(200).json(results);
     });
 };
 
 
 exports.getYearsWithoutPrizesF7 = (req, res) => {
     services.getYearsWithoutPrizesF7((error, results) => {
-        console.log(chalk.green("Request for F8 is a success!"));
+        console.log(chalk.green("Request for F7 is a success!"));
         if (error) {
             return res.status(400).send({success: 0, data: error});
         }
-        return res.status(200).send({success: 1, data: results});
+        res.status(200).json(results);
     });
 };
 
@@ -87,90 +86,57 @@ exports.allYearsPrizesSortedF8 = (req, res) => {
     let sort = req.query.sort;
     sort = typeof sort === 'undefined' ? "" : sort;
 
-    console.log(req.query.sort);
+    console.log("Sort: " + req.query.sort);
 
+    // Check if sort is empty or undefined
     if (validator.isEmpty(sort) || sort === '{sort}' || sort === 'undefined') {
         return res.status(400).send({success: 0, data: error});
     } else if ((sort === "asc_laureates" ) || (sort === "desc_laureates")) {
+        // Check if sort is asc or desc
         services.allYearsPrizesSortedF8(sort,(error, results) => {
             console.log(chalk.green("Request for F8 is a success!"));
             if (error) {
                 return res.status(400).send({success: 0, data: error});
             }
-            return res.status(200).send({success: 1, data: results});
+            res.status(200).json(results);
         });
     } else {
-        return res.status(400).send({success: 0, data: "Bad request! You need to specify +laureates or -laureates"});
+        return res.status(400).send({success: 0, data: "Bad request! You need to specify asc_laureates or desc_laureates!"});
     }
 };
 
 
-exports.allYearsPrizesSortedF11 = (req, res) => {
-    console.log(chalk.green("Request for F11 is a success!"));
-    let sort = req.query.sort;
-    sort = typeof sort === 'undefined' ? "" : sort;
-    // DEBUG
-    //  console.log(req.query.sort);
-    if (validator.isEmpty(sort) || sort === '{sort}' || sort === 'undefined') {
-        return res.status(400).send({success:0,data:error});
-    } else if ((sort === "-laureates" ) || (sort === "+laureates")) {
-        services.allYearsPrizesSortedF11(sort, (error, results) => {
-            if (error) {
-                console.log(error);
-                return res.status(400).send({success: 0, data: error});
-            }
-            return res.status(200).send({success: 1, data: results});
-        })
-    } else {
-        return res.status(400).send({success: 0, data: "Bad request! You need to specify +laureates or -laureates"});
-    }
-};
-
-
-exports.deleteLaureateF13 = (req, res) => {
-    console.log(chalk.green("Request for F13 is a success!"));
+exports.deleteLaureateF9 = (req, res) => {
+    console.log(chalk.green("Request for F9 is a success!"));
     let idLaureate = req.query.idLaureate
-    let year = req.query.year;
-    let category = req.query.category;
 
     idLaureate = typeof idLaureate === 'undefined' ? "" : idLaureate;
-    year = typeof year === 'undefined' ? "" : year;
-    category = typeof category === 'undefined' ? "" : category;
-    // DEBUG
-    /*console.log("ID: " + id);
-    console.log("Year: " + year);
-    console.log("Category: " + category);*/
-    if (validator.isEmpty(idLaureate) || idLaureate === '{idLaureate}' || idLaureate === 'undefined' ||
-        validator.isEmpty(year) || year === '{year}' || year === 'undefined' ||
-        validator.isEmpty(category) || category === '{category}' || category === 'undefined') {
-            return res.status(400).send({success:0,data: "Bad request. Please specify and ID, year and category."});
-    } else if ((validator.isInt(idLaureate) && validator.isInt(year) && !(validator.isEmpty(category)))) {
-        services.deleteLaureateF13(idLaureate, year, category, (error, results) => {
+
+    /*console.log("ID: " + id);*/
+    if (validator.isEmpty(idLaureate) || idLaureate === '{idLaureate}' || idLaureate === 'undefined') {
+            return res.status(400).send({success:0,data: "Bad request. Please specify an ID."});
+    } else if ((validator.isInt(idLaureate))) {
+        services.deleteLaureateF9([idLaureate], (error, results) => {
+            console.log(chalk.green("Request for F9 is a success!"));
             if (error) {
-                console.log(error);
                 return res.status(400).send({success: 0, data: error});
             }
-            return res.status(200).send({success: 1, data: results});
-        })
+            res.status(200).json(results);
+        });
     } else {
         return res.status(400).send({success: 0, data: "Bad request"});
     }
 }
 
-exports.updateLaureateF14 = (req, res) => {
-    console.log(chalk.green("Request for F14 is a success!"));
-    let idLaureate = req.params.idLaureate
-    let year = req.params.year;
-    let category = req.params.category;
+exports.updateLaureateF10 = (req, res) => {
+    console.log(chalk.green("Request for F10 is a success!"));
+    let idLaureate = req.params.idLaureate;
+    let year = req.body.year;
+    let category = req.body.category;
     let motivation = req.body.motivation;
 
-    // DEBUG
-    /*
-    console.log("ID: " + req.query.idLaureate);
-    console.log("Year: " + req.query.year);
-    console.log("Category: " + req.query.category);
-    console.log("Motiv: " + req.params.motivation);
-    */
+    console.log("ID: " + idLaureate + " Year: " + year + " Category: " + category + " Motivation: " + motivation);
+
     idLaureate = typeof idLaureate === 'undefined' ? "" : idLaureate;
     year = typeof year === 'undefined' ? "" : year;
     category = typeof category === 'undefined' ? "" : category;
@@ -180,14 +146,16 @@ exports.updateLaureateF14 = (req, res) => {
         validator.isEmpty(year) || year === '{year}' || year === 'undefined' ||
         validator.isEmpty(category) || category === '{category}' || category === 'undefined' ||
         validator.isEmpty(motivation) || motivation === '{motivation}' || motivation === 'undefined'){
+            console.log("pass pas good")
             return res.status(400).send({success:0,data: "Bad request. Please specify an ID, year and category to update a motivation."});
+
     } else if (validator.isInt(idLaureate) && validator.isInt(year) && validator.isAscii(category) && validator.isAscii(motivation)) {
-        services.updateLaureateF14(idLaureate, year, category, motivation, (error, results) => {
+        services.updateLaureateF10(idLaureate, year, category, motivation, (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(400).send({success: 0, data: error});
             }
-            return res.status(200).send({success: 1, data: results});
+            return res.status(200).json(results);
         })
     } else {
         return res.status(400).send({success: 0, data: "Bad request"});

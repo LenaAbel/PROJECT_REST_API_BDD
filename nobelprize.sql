@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS PRIZES
     annee       VARCHAR(50),
     id_category INT,
     CONSTRAINT PK_Prizes PRIMARY KEY (id_prize),
-    CONSTRAINT PK_PrizeCategory FOREIGN KEY (id_category) REFERENCES CATEGORY (id_category)
+    CONSTRAINT FK_PrizeCategory FOREIGN KEY (id_category) REFERENCES CATEGORY (id_category) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS remporte
@@ -35,6 +35,6 @@ CREATE TABLE IF NOT EXISTS remporte
     id_prize    INT,
     motivation  VARCHAR(8000),
     CONSTRAINT PK_remporte PRIMARY KEY (id_laureate, id_prize),
-    CONSTRAINT PK_remporteIdLaureate FOREIGN KEY (id_laureate) REFERENCES LAUREATES (id_laureate),
-    CONSTRAINT PK_remporteIdPrize FOREIGN KEY (id_prize) REFERENCES PRIZES (id_prize)
+    CONSTRAINT FK_remporteIdLaureate FOREIGN KEY (id_laureate) REFERENCES LAUREATES (id_laureate) ON DELETE CASCADE,
+    CONSTRAINT FK_remporteIdPrize FOREIGN KEY (id_prize) REFERENCES PRIZES (id_prize) ON DELETE CASCADE
 );

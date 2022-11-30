@@ -9,7 +9,7 @@ router.get("/", controller.allYearsPrizesSortedF8);
  * @swagger
  * /years:
  *   get:
- *      description:  Used to display all years of Nobel Prizes sorted by number of ascending/descending laureates. (F11)
+ *      description:  Used to display all years of Nobel Prizes sorted by number of ascending/descending laureates. (F8)
  *      tags:
  *          - YEARS
  *      parameters:
@@ -17,7 +17,7 @@ router.get("/", controller.allYearsPrizesSortedF8);
  *            name: sort
  *            type: string
  *            required: false
- *            example: -laureates, +laureates
+ *            example: asc_laureates, desc_laureates
  *      responses:
  *          '200':
  *              description: Resource found successfully
@@ -33,7 +33,7 @@ router.get("/winners", controller.getNumLaureatesPerYearF6);
  * @swagger
  * /years/winners:
  *   get:
- *      description: Used to get the number of laureates who received a prize each year (F8)
+ *      description: Used to get the number of laureates who received a prize each year (F6)
  *      tags:
  *          - YEARS
  *      responses:
@@ -51,7 +51,7 @@ router.get("/noPrizes", controller.getYearsWithoutPrizesF7);
  * @swagger
  * /years/noPrizes:
  *   get:
- *      description: Used to get all years in which no Nobel Prize was awarded been awarded. (F10)
+ *      description: Used to get all years in which no Nobel Prize was awarded been awarded. (F7)
  *      tags:
  *          - YEARS
  *      responses:

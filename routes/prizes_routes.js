@@ -9,7 +9,7 @@ router.get("/superWinners", controller.moreThanOnePrizeF3);
  * @swagger
  * /prizes/superWinners:
  *   get:
- *      description: Get the number of laureates who received more than one prize (F5)
+ *      description: Get the number of laureates who received more than one prize (F3)
  *      tags:
  *          - PRIZES
  *      responses:

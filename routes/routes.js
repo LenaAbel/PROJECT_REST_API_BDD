@@ -34,8 +34,8 @@ router.get("/laureates/:idLaureate?", controller.getLaureatesByIdF2);
  *          - in: path
  *            name: idLaureate
  *            type: integer
- *            required: false
- *            description: Numeric ID of the laureate to get (Optional)
+ *            required: true
+ *            description: Numeric ID of the laureate to get
  *      responses:
  *          '200':
  *              description: Resource added successfully
@@ -52,7 +52,7 @@ router.put("/laureates/:idLaureate", controller.updateLaureateF10);
  * @swagger
  * /laureates/{idLaureate}:
  *   put:
- *      description: Used to update a laureate's motivation with a given ID, year and category (F14)
+ *      description: Used to update a laureate's motivation with a given ID, year and category (F10)
  *      tags:
  *          - LAUREATES
  *      parameters:
@@ -89,13 +89,13 @@ router.put("/laureates/:idLaureate", controller.updateLaureateF10);
  *              description: Bad request
  */
 
-http://localhost:3000/laureates?idLaureate=6
+//http://localhost:3000/laureates?idLaureate=6
 router.delete("/laureates",controller.deleteLaureateF9);
 /**
  * @swagger
  * /laureates:
  *   delete:
- *      description:  Used to delete a laureate (F13)
+ *      description:  Used to delete a laureate (F9)
  *      tags:
  *          - LAUREATES
  *      parameters:

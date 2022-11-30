@@ -9,7 +9,7 @@ router.get("/", controller.getCategoriesF4);
  * @swagger
  * /categories:
  *   get:
- *      description: Used to get all categories (F6)
+ *      description: Used to get all categories (F4)
  *      tags:
  *          - CATEGORIES
  *      responses:
@@ -27,7 +27,7 @@ router.get("/winners", controller.mostPrizePerCategoryF5);
  * @swagger
  * /categories/winners:
  *   get:
- *      description: Used to get the category who received the most prizes (F7)
+ *      description: Used to get the category who received the most prizes (F5)
  *      tags:
  *          - CATEGORIES
  *      responses:
